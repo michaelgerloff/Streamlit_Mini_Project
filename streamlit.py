@@ -40,7 +40,7 @@ if st.button('Predict'):
     malicious = xgboost_pipeline.predict(df_output)
     if malicious:
         prob = xgboost_pipeline.predict_proba(df_output)[0,1]
-        st.write('The website with the URL ', url, 'is malicious with a probability of ', prob)
+        st.write('The website with the URL ', url, 'is malicious with a probability of ', prob, ".")
     else:
         prob = xgboost_pipeline.predict_proba(df_output)[0,0]
-        st.write('The website with the URL ', url, 'is not malicious with a probability of ', prob)
+        st.write('The website with the URL ', url, 'is not malicious with a probability of ', prob, ".")
