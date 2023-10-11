@@ -16,13 +16,17 @@ url = st.text_input('Enter the URL of the website you want to check', "URL")
 st.write('The URL you entered is: ', url)
 
 category = loaded_list[1]
+numerical = loaded_list[0]
+col_order = loaded_list[2]
+
+st.write(col_order)
 output= {}
 
 for key, value in category.items():
     output[key] = st.selectbox("Please select the " + key + ":", value)
     
 
-numerical = loaded_list[0]
+
 
 
 for key, value in numerical.items():
@@ -32,7 +36,8 @@ for key, value in numerical.items():
         output[key]= float(st.slider(key, min_value=0.0, max_value=(value[1]*2)))
     
 if st.button('Predict'):
-    df_output = pd.DataFrame(output, index=[0])
+    sorted_dict = {key: output[key] for key in col_order.values()}
+    df_output = pd.DataFrame(sorted_dict, index=[0])
     st.write(df_output.dtypes)
     st.write(df_output)
     xgboost_pipeline.predict(df_output)
