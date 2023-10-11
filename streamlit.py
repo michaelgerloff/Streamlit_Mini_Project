@@ -19,7 +19,6 @@ category = loaded_list[1]
 numerical = loaded_list[0]
 col_order = loaded_list[2]
 
-st.write(col_order)
 output= {}
 
 for key, value in category.items():
@@ -36,9 +35,12 @@ for key, value in numerical.items():
         output[key]= float(st.slider(key, min_value=0.0, max_value=(value[1]*2)))
     
 if st.button('Predict'):
-    sorted_dict = {key: output[key] for key in col_order.values()}
-    df_output = pd.DataFrame(sorted_dict, index=[0])
-    st.write(df_output.dtypes)
-    st.write(df_output)
-    xgboost_pipeline.predict(df_output)
-    st.write('The website with the URL ', url, 'is malicious with a probability of ', 0.5)
+    df_output = pd.DataFrame(output, index=[0])
+    df_output = df_output[list(col_order.values())[0]]
+    malicious = xgboost_pipeline.predict(df_output)
+    if malicious:
+        prob = xgboost_pipeline.predict_proba(df_output)[0,1]
+        st.write('The website with the URL ', url, 'is malicious with a probability of ', prob)
+    else:
+        prob = xgboost_pipeline.predict_proba(df_output)[0,0]
+        st.write('The website with the URL ', url, 'is not malicious with a probability of ', prob)
